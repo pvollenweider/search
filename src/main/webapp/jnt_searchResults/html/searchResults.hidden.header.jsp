@@ -42,6 +42,7 @@
     <c:otherwise>
         <c:set target="${moduleMap}" property="listTotalSize" value="${searchMap[hitsCountName]}" />
         <c:set target="${moduleMap}" property="resultsHits" value="${searchMap[hitsName]}" />
+        <c:set target="${moduleMap}" property="listApproxSize" value="${searchMap['listApproxSize']}" />	
         <c:set target="${moduleMap}" property="displaySearchParams" value="true" />
     </c:otherwise>
 </c:choose>

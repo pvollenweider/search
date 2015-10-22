@@ -4,6 +4,8 @@
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
+<%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions"%>
+
 <template:addResources type="javascript" resources="jquery.min.js"/>
 <template:addResources type="css" resources="advancedsearchform.css"/>
 
@@ -55,9 +57,9 @@
             </fieldset>
             <fieldset>
                 <legend><fmt:message key="search.advancedSearch.criteria.authorAndDate.title"/></legend>
-                <p><label class="left" for="searchCreatedBy"><fmt:message key="search.advancedSearch.criteria.authorAndDate.createdBy"/></label><s:createdBy id="searchCreatedBy"/></p>
+                <p><label class="left" for="searchCreatedBy"><fmt:message key="search.advancedSearch.criteria.authorAndDate.createdBy"/></label><s:findUser fieldId="searchCreatedBy" fieldName="src_createdBy" fieldValue="${param['src_createdBy']}" selectedValue="username" /></p>
                 <p><label class="left" for="searchCreated"><fmt:message key="search.advancedSearch.criteria.authorAndDate.created"/></label><s:created id="searchCreated"/></p>
-                <p><label class="left" for="searchLastModifiedBy"><fmt:message key="search.advancedSearch.criteria.authorAndDate.modifiedBy"/></label><s:lastModifiedBy id="searchLastModifiedBy"/></p>
+                <p><label class="left" for="searchLastModifiedBy"><fmt:message key="search.advancedSearch.criteria.authorAndDate.modifiedBy"/></label><s:findUser fieldId="searchLastModifiedBy" fieldName="src_lastModifiedBy" selectedValue="username" fieldValue="${param['src_lastModifiedBy']}" /></p>
                 <p><label class="left" for="searchLastModified"><fmt:message key="search.advancedSearch.criteria.authorAndDate.modified"/></label><s:lastModified id="searchLastModified"/></p>
             </fieldset>
             <fieldset>

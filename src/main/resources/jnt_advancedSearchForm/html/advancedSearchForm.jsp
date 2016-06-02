@@ -78,6 +78,7 @@
                     <p><label class="left" for="searchFilePath"><fmt:message key="search.advancedSearch.criteria.miscellanea.location"/></label><s:filePath id="searchFilePath"/></p>
                 </div>
                 <p><label class="left" for="searchResultsPerPage"><fmt:message key="search.advancedSearch.criteria.miscellanea.itemsPerPage"/></label><s:itemsPerPage id="searchResultsPerPage"/></p>
+                <p><label class="left" for="searchOrderBy"><fmt:message key="search.advancedSearch.criteria.miscellanea.sortBy"/></label><s:orderBy id="searchOrderBy"/></p>                
             </fieldset>
             <div class="divButton">
                 <input type="submit" name="search" class="button" value="<fmt:message key='search.advancedSearch.submit'/>"/>

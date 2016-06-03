@@ -72,7 +72,6 @@
         <s:pagePath value="${searchPath}" display="false" includeChildren="true"/>
         <s:nodeType value="${searchType}" display="false" />
         <s:language value="${renderContext.mainResource.locale}" display="false" />
-        <s:orderBy id="searchCustomOrdering" operand="property" propertyName="jcr:lastModified" display="false"/>
         <input class="searchsubmit" type="submit"  title="<fmt:message key='search.submit'/>" value=""/>
 
     </s:form><br class="clear"/>

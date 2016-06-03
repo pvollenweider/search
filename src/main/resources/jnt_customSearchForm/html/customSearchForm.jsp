@@ -52,7 +52,7 @@
     <c:set var="searchPath"   value="${renderContext.site.path}"/>
 </c:if>
 <c:if test="${empty searchType}">
-    <c:set var="searchType" value="nt:base"/>
+    <c:set var="searchType" value="jmix:searchable"/>
 </c:if>
 <c:set var="xPathQuery" value="/jcr:root${searchPath}//element(*, ${searchType})[jcr:contains(.,'{$q}*')]" />
 
@@ -72,7 +72,6 @@
         <s:pagePath value="${searchPath}" display="false" includeChildren="true"/>
         <s:nodeType value="${searchType}" display="false" />
         <s:language value="${renderContext.mainResource.locale}" display="false" />
-        <s:orderBy id="searchCustomOrdering" operand="property" propertyName="jcr:lastModified" display="false"/>
         <input class="searchsubmit" type="submit"  title="<fmt:message key='search.submit'/>" value=""/>
 
     </s:form><br class="clear"/>

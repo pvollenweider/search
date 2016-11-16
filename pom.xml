@@ -49,10 +49,10 @@
     <parent>
         <groupId>org.jahia.modules</groupId>
         <artifactId>jahia-modules</artifactId>
-        <version>7.1.0.0</version>
+        <version>7.2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>search</artifactId>
-	<version>7.1.3-SNAPSHOT</version>
+	<version>7.2.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Jahia Search</name>
     <description>Jahia template module for using simple and advanced content search features.</description>
@@ -64,6 +64,9 @@
   </scm>
 
     <properties>
+        <export-package>
+            org.jahia.modules.search.provider
+        </export-package>
         <jahia.modules.importPackage>
             org.jahia.defaults.config.spring,
             org.jahia.exceptions,

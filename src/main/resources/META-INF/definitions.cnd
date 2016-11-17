@@ -20,3 +20,8 @@
 - autoSuggestMaxTermCount (long)=1 indexed=no  
 
 [jnt:openSearchDescriptor] > jnt:content, mix:title, jmix:queryContent
+
+[jmix:searchResultsDynamicView] mixin
+ extends = jnt:searchResults
+ itemtype = layout
+ - j:dynamicViews (string, choicelist[dynamicTemplates]) multiple nofulltext

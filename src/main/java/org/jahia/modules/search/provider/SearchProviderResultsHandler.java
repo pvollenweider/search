@@ -41,56 +41,16 @@
  *     If you are unsure which license is appropriate for your use,
  *     please contact the sales department at sales@jahia.com.
  */
-package org.jahia.modules.search.initializers;
-
-import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
-import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
-import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitializer;
-import org.jahia.services.content.nodetypes.initializers.TemplatesChoiceListInitializerImpl;
-import org.jahia.services.search.SearchServiceImpl;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+package org.jahia.modules.search.provider;
 
 /**
- * Choicelist for dynamic templates
- *
- * @author kevan
- *
+ * Interface to specify that the SearchProvider is providing a custom view for search results component
+ * Created by kevan
  */
-public class DynamicTemplatesChoiceListInitalizerImpl extends TemplatesChoiceListInitializerImpl implements ModuleChoiceListInitializer {
-
-    public final static String  DYNAMIC_TEMPLATES_SEPARATOR = " -> ";
-
+public interface SearchProviderResultsHandler {
     /**
-     * The choice list initializer unique key.
+     * Returns the custom view for the search results component
+     * @return the view
      */
-    private String key;
-
-    @Override
-    public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition declaringPropertyDefinition, String param, List<ChoiceListValue> values, Locale locale, Map<String, Object> context) {
-        List<ChoiceListValue> templates = super.getChoiceListValues(declaringPropertyDefinition, param, values, locale, context);
-        List<String> providers = SearchServiceImpl.getInstance().getAvailableProviders();
-
-        List<ChoiceListValue> result = new ArrayList<>();
-        for (String provider : providers) {
-            for (ChoiceListValue template : templates) {
-                String value = provider + DYNAMIC_TEMPLATES_SEPARATOR + template.getDisplayName();
-                result.add(new ChoiceListValue(value, value));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public void setKey(String key) {
-        this.key = key;
-    }
+    String getSearchResultsView();
 }

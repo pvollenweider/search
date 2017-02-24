@@ -4,14 +4,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="searchResultsTemplateFilter" class="org.jahia.modules.search.render.SearchResultsFilter">
+    <bean id="searchResultsTemplateFilter" class="org.jahia.modules.search.render.SearchResultsFilter" init-method="init">
         <property name="priority" value="16.7"/>
-        <property name="description" value="overide searchresults view based on dynamic views set on the node"/>
-        <property name="applyOnNodeTypes" value="jmix:searchResultsDynamicView"/>
-    </bean>
-
-    <bean id="dynamicTemplatesInitializer"
-          class="org.jahia.modules.search.initializers.DynamicTemplatesChoiceListInitalizerImpl">
-        <property name="key" value="dynamicTemplates"/>
+        <property name="description" value="overide searchresults view when search provider come with a custom view"/>
+        <property name="applyOnNodeTypes" value="jnt:searchResults"/>
     </bean>
 </beans>

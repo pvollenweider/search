@@ -43,20 +43,16 @@
  */
 package org.jahia.modules.search.render;
 
-import org.apache.commons.lang.StringUtils;
-import org.jahia.modules.search.initializers.DynamicTemplatesChoiceListInitalizerImpl;
-import org.jahia.services.content.JCRNodeWrapper;
-import org.jahia.services.content.JCRValueWrapper;
+import org.jahia.modules.search.provider.SearchProviderResultsHandler;
 import org.jahia.services.render.RenderContext;
 import org.jahia.services.render.Resource;
 import org.jahia.services.render.filter.AbstractFilter;
 import org.jahia.services.render.filter.RenderChain;
-import org.jahia.services.search.SearchProvider;
 import org.jahia.services.search.SearchServiceImpl;
 
 /**
  * RenderFilter in charge of overriding the template of the search results component
- * when the current search results node is of type jmix:searchResultsDynamicView
+ * when the current search provider is an instance of SearchProvider.SupportsResultsRendering
  *
  * @author kevan
  *
@@ -65,21 +61,21 @@ public class SearchResultsFilter extends AbstractFilter {
 
     @Override
     public String prepare(RenderContext renderContext, Resource resource, RenderChain chain) throws Exception {
-        JCRNodeWrapper searchResultsNode = resource.getNode();
-        SearchProvider currentSearchProvider = SearchServiceImpl.getInstance().getCurrentProvider();
-
-        if(searchResultsNode.hasProperty("j:dynamicViews")) {
-            JCRValueWrapper values[] = searchResultsNode.getProperty("j:dynamicViews").getValues();
-
-            for (JCRValueWrapper value : values) {
-                String dynamicView = value.getString();
-                if(StringUtils.isNotEmpty(dynamicView) && dynamicView.startsWith(currentSearchProvider.getName())) {
-                    resource.setTemplate(StringUtils.substringAfterLast(dynamicView,
-                            DynamicTemplatesChoiceListInitalizerImpl.DYNAMIC_TEMPLATES_SEPARATOR));
-                }
-            }
-        }
-
+        resource.setTemplate(((SearchProviderResultsHandler) SearchServiceImpl.getInstance().getCurrentProvider()).getSearchResultsView());
         return null;
+    }
+
+    public void init() {
+        addCondition(new ExecutionCondition() {
+            @Override
+            public boolean matches(RenderContext renderContext, Resource resource) {
+                return SearchServiceImpl.getInstance().getCurrentProvider() instanceof SearchProviderResultsHandler;
+            }
+
+            @Override
+            public String toString() {
+                return "CurrentSearchProvider instanceof 'SearchProvider.SupportsResultsRendering'";
+            }
+        });
     }
 }

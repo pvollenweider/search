@@ -43,22 +43,16 @@
  */
 package org.jahia.modules.search.initializers;
 
-import org.apache.commons.lang.StringUtils;
-import org.jahia.services.content.JCRNodeWrapper;
-import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
-import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
 import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitializer;
-import org.jahia.services.render.BundleView;
-import org.jahia.services.render.RenderService;
-import org.jahia.services.render.View;
+import org.jahia.services.content.nodetypes.initializers.TemplatesChoiceListInitializerImpl;
 import org.jahia.services.search.SearchServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Choicelist for dynamic templates
@@ -66,9 +60,7 @@ import java.util.*;
  * @author kevan
  *
  */
-public class DynamicTemplatesChoiceListInitalizerImpl implements ModuleChoiceListInitializer {
-
-    private static Logger logger = LoggerFactory.getLogger(DynamicTemplatesChoiceListInitalizerImpl.class);
+public class DynamicTemplatesChoiceListInitalizerImpl extends TemplatesChoiceListInitializerImpl implements ModuleChoiceListInitializer {
 
     public final static String  DYNAMIC_TEMPLATES_SEPARATOR = " -> ";
 
@@ -79,78 +71,17 @@ public class DynamicTemplatesChoiceListInitalizerImpl implements ModuleChoiceLis
 
     @Override
     public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition declaringPropertyDefinition, String param, List<ChoiceListValue> values, Locale locale, Map<String, Object> context) {
-        if (context == null) {
-            return new ArrayList<>();
-        }
-
-        JCRNodeWrapper node = (JCRNodeWrapper) context.get("contextNode");
-        JCRNodeWrapper parentNode = (JCRNodeWrapper) context.get("contextParent");
-        JCRSiteNode site = null;
-
-        SortedSet<View> filteredViews = new TreeSet<>();
-        SortedSet<View> allViews;
-
-        try {
-            if (node != null) {
-                site = node.getResolveSite();
-            }
-            if (site == null && parentNode != null) {
-                site = parentNode.getResolveSite();
-            }
-
-            // get all the views possible for jnt:searchResults on current site
-             allViews = RenderService.getInstance().getViewsSet(
-                    NodeTypeRegistry.getInstance().getNodeType("jnt:searchResults"), site, "html");
-
-        } catch (RepositoryException e) {
-            logger.error(e.getMessage(), e);
-            return new ArrayList<>();
-        }
-
-        if (!allViews.isEmpty()) {
-            for (View view : allViews) {
-                // only get views for jnt_searchResults
-                if ((((BundleView) view).getResource()).startsWith("/jnt_searchResults/")) {
-
-                    // only get visible views for the context
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    fillProperties(map, view.getDefaultProperties());
-                    fillProperties(map, view.getProperties());
-                    boolean isStudio = site != null && site.getPath().startsWith("/modules");
-                    if (isViewVisible(view.getKey(), param, map, isStudio)) {
-                        filteredViews.add(view);
-                    }
-                }
-            }
-        }
-
-        // build values
-        List<ChoiceListValue> vs = new ArrayList<>();
+        List<ChoiceListValue> templates = super.getChoiceListValues(declaringPropertyDefinition, param, values, locale, context);
         List<String> providers = SearchServiceImpl.getInstance().getAvailableProviders();
+
+        List<ChoiceListValue> result = new ArrayList<>();
         for (String provider : providers) {
-            for (View view : filteredViews) {
-                String value = provider + DYNAMIC_TEMPLATES_SEPARATOR + view.getKey();
-                vs.add(new ChoiceListValue(value, value));
+            for (ChoiceListValue template : templates) {
+                String value = provider + DYNAMIC_TEMPLATES_SEPARATOR + template.getDisplayName();
+                result.add(new ChoiceListValue(value, value));
             }
         }
-        Collections.sort(vs);
-        return vs;
-    }
-
-    private boolean isViewVisible(String viewKey, String param, HashMap<String, Object> viewProperties, boolean isStudio) {
-        final Object visible = viewProperties.get(View.VISIBLE_KEY);
-        final Object type = viewProperties.get(View.TYPE_KEY);
-        return !View.VISIBLE_FALSE.equals(visible)
-                && (!View.VISIBLE_STUDIO_ONLY.equals(visible) || isStudio)
-                && ((type == null && StringUtils.isEmpty(param)) || param.equals(type))
-                && !viewKey.startsWith("wrapper.")
-                && !viewKey.contains("hidden.");
-    }
-
-    private void fillProperties(HashMap<String, Object> map, Properties properties) {
-        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            map.put(entry.getKey().toString(), entry.getValue());
-        }
+        return result;
     }
 
     @Override

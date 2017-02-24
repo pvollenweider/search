@@ -64,9 +64,6 @@
   </scm>
 
     <properties>
-        <export-package>
-            org.jahia.modules.search.provider
-        </export-package>
         <jahia.modules.importPackage>
             org.jahia.defaults.config.spring,
             org.jahia.exceptions,
